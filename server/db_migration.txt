@@ -1,0 +1,2 @@
+generate migrations:
+npm run migration:generate -- db/migrations/initial
