@@ -55,8 +55,6 @@ export class UserEntity{
     this.password = await hash(password || this.password , salt);
   }
 
-  
-
 
 
 }

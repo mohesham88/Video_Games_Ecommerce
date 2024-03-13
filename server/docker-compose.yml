@@ -1,0 +1,60 @@
+# Use postgres/example user/password credentials
+version: '3.9'
+
+services:
+
+  api:
+    build:
+      dockerfile : Dockerfile
+      context: ./
+    depends_on :
+      - postgres
+    environment:
+      #DATABASE_URL: postgres://${POSTGRESQL_USERNAME}:${POSTGRESQL_DATABASE}@postgres:5432/${POSTGRESQL_DATABASE}
+      DATABASE_URL: postgres://postgres:k0bmtW34Y66sa1W5H7@postgres:5432/postgres
+      NODE_ENV : 3000
+      PORT : 3000
+    ports:
+      - "8080:3000"
+
+
+  postgres:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    volumes:
+      # dump local db data by this line
+      #- ./pg_dumps:/docker-entrypoint-initdb.d
+      - data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRES_USER : ${POSTGRESQL_USERNAME}
+      POSTGRES_DB : ${POSTGRESQL_DATABASE}
+    ports:
+      - "3500:5432"
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports :
+  #     - '5432:5432'
+
+  pg-admin:
+    image: dpage/pgadmin4:8
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=moheshamfathi@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5050
+    ports:
+      - "5050:5050"
+
+
+volumes:
+  data: 

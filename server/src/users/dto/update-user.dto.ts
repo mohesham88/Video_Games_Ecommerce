@@ -11,8 +11,6 @@ export class UpdateUserDto{
   @IsOptional()
   address : string;
   
-  
-  
   @IsOptional()
   @IsIn(["male", "female"])
   gender : "male" | "female";
