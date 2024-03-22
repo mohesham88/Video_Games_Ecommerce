@@ -4,6 +4,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { TypeormExceptionFilter } from 'src/filters/typeorm-exception.filter';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
+import { MatchUserIdWithProductGuard } from './guards/match-user-with-product.guard';
+import { ProductEntity } from './entities/product.entity';
 
 @Controller('products')
 @UseGuards(JwtGuard)
@@ -33,17 +35,19 @@ export class ProductsController {
   }
 
 
-
+  
   @Patch(':id')
   @UseFilters(new TypeormExceptionFilter)
-  async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto,  @Request() req) {
-    const userId = req.user.id;
-    return this.productsService.update(id, userId , updateProductDto);
+  @UseGuards(MatchUserIdWithProductGuard)
+  async update(@Request() req, @Body() updateProductDto : UpdateProductDto) {
+    const productId : string = req.product.id;
+    return this.productsService.update(productId, updateProductDto);
   }
-
+  
   @Delete(':id')
+  @UseGuards(MatchUserIdWithProductGuard)
   async remove(@Param('id') id: string,  @Request() req) {
-    const userId = req.user.id;
-    return this.productsService.remove(id , userId);
+    const product : ProductEntity = req.product;
+    return this.productsService.remove(product);
   }
 }

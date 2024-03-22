@@ -1,5 +1,5 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { Observable } from "rxjs";
+import { CanActivate, ExecutionContext, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ProductsService } from "../products.service";
 
 
 
@@ -7,12 +7,21 @@ import { Observable } from "rxjs";
 @Injectable()
 export class MatchUserIdWithProductGuard implements CanActivate {
 
-  canActivate(context: ExecutionContext): boolean {
+  constructor(private readonly productService: ProductsService){}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
       
     const request  = context.switchToHttp().getRequest();
     const {user} = request;
-    const {id} = request.params;
-    // console.log(`${id} ${user.id}`)
-    return (user.id === id);
+    const {id : productId} = request.params;
+    // console.log(`${productId} ${user.id}`)
+    const product = await this.productService.findOneWithRelations(productId);
+    if(!product){
+      throw new NotFoundException(`Product with id ${productId} not found`);
+    }
+
+    request.product = product;
+
+    return (String(product.addedBy.id) === user.id);
   }
 }

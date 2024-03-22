@@ -4,11 +4,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotFoundError } from 'rxjs';
-import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CategoriesService } from 'src/categories/categories.service';
-import { MatchUserIdGuard } from 'src/auth/guards/match-user-id.guard';
-import { UserEntity } from 'src/users/entities/user.entity';
+
 
 @Injectable()
 export class ProductsService {
@@ -55,31 +52,11 @@ export class ProductsService {
   }
 
   
-  async update(productId: string, userId : string ,updateProductDto: UpdateProductDto) {
-
-    const product = await this.findOneWithRelations(productId);
-
-    if(String(product.addedBy.id) !== userId){
-      throw new UnauthorizedException(`User Doesn't have access to update this product`);
-    }
-
-
+  async update(productId : string , updateProductDto : UpdateProductDto) {
     return this.productRepository.save({ id : productId, ...updateProductDto});
   }
 
-  async remove(id: string, userId : string) {
-    // const product = await this.productRepository.findOneBy({id});
-    
-    const product = await this.findOneWithRelations(id);
-    console.log({...product})
-    if(!product){
-      throw new NotFoundException(`Product with id ${id} doesn't exist`);
-    }
-
-    if(String(product.addedBy.id) !== userId){
-      throw new UnauthorizedException(`User Doesn't have access to delete this product`);
-    }
-
+  async remove(product: ProductEntity) {
     return await this.productRepository.remove([product]);
   }
 
