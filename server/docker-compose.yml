@@ -10,12 +10,13 @@ services:
     depends_on :
       - postgres
     environment:
-      #DATABASE_URL: postgres://${POSTGRESQL_USERNAME}:${POSTGRESQL_DATABASE}@postgres:5432/${POSTGRESQL_DATABASE}
-      DATABASE_URL: postgres://postgres:k0bmtW34Y66sa1W5H7@postgres:5432/postgres
+      DATABASE_URL: postgres://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@postgres:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}
       NODE_ENV : 3000
       PORT : 3000
     ports:
-      - "8080:3000"
+      - "8080:8080"
+    # volumes:
+    #   - /etc/localtime:/etc/localtime:ro
 
 
   postgres:

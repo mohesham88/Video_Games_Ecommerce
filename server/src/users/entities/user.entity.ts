@@ -1,8 +1,9 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Timestamp, Unique, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Timestamp, Unique, UpdateDateColumn } from "typeorm";
 import { UserRole } from "../utils/common/user-roles.enum";
 import { UserGender } from "../utils/common/user-gender.enum";
 import { genSalt, hash } from "bcrypt";
 import { IsOptional } from "class-validator";
+import { ProductEntity } from "src/products/entities/product.entity";
 
 
 
@@ -47,6 +48,9 @@ export class UserEntity{
   
   @UpdateDateColumn()
   upadatedAt : Timestamp;
+
+  @OneToMany((type) => ProductEntity, (prod) => prod.addedBy)
+  products : ProductEntity[];
 
 
   @BeforeInsert()

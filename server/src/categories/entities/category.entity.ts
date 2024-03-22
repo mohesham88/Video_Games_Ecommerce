@@ -1,5 +1,6 @@
 import { MaxLength, MinLength } from "class-validator";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
+import { ProductEntity } from "src/products/entities/product.entity";
+import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
 
 
 @Entity("Categories")
@@ -24,6 +25,11 @@ export class CategoryEntity {
 
   @UpdateDateColumn()
   updatedAt : Timestamp;
+
+  // product have one or more categories
+  @OneToMany((type) => ProductEntity, (prod) => prod.category)
+  products : ProductEntity[];
+
 
 
   // category can be a combination of other categories

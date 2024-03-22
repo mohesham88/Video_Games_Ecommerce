@@ -19,7 +19,7 @@ import { RefreshJwtStrategy } from './strategies/refreshToken-strategy';
     {
       secret : process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: "600s",
+        expiresIn: "3600s",
       }
     }
   ),

@@ -1,2 +1,5 @@
-generate migrations:
+generate migrations file:
 npm run migration:generate -- db/migrations/initial
+
+apply the migrations:
+npm run migration:run

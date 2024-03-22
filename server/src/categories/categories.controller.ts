@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CategoryDto } from './dto/category.dto';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -17,5 +17,21 @@ export class CategoriesController {
   @Roles(UserRole.ADMIN)
   async create(@Body() category: CategoryDto) : Promise<CategoryDto> {
     return await this.categoriesService.createCategory(category);
+  }
+
+  @Get(':id')
+  async findCategory(@Param('id') id: string) : Promise<CategoryDto>{
+    console.log(id);
+    return await this.categoriesService.findOne(id);
+  }
+
+
+  @Get()
+  async getAllCategories() : Promise<{categories : CategoryDto[]}> {
+    const categories = await this.categoriesService.findAll();
+
+    return {
+      categories : categories
+    };
   }
 }
