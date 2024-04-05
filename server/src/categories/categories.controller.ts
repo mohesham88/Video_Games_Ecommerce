@@ -7,7 +7,8 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from 'src/users/utils/common/user-roles.enum';
 
 @Controller('category')
-@UseGuards(JwtGuard, RolesGuard)
+// @UseGuards(JwtGuard, RolesGuard)
+@UseGuards(RolesGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 

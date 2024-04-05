@@ -2,13 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseFilters, UseGuard
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { TypeormExceptionFilter } from 'src/filters/typeorm-exception.filter';
+import { TypeormExceptionFilter } from 'src/utils/filters/typeorm-exception.filter';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { MatchUserIdWithProductGuard } from './guards/match-user-with-product.guard';
 import { ProductEntity } from './entities/product.entity';
 
 @Controller('products')
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 

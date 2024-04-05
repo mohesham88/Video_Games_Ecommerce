@@ -8,13 +8,15 @@ import { UsersService } from 'src/users/users.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RefreshJwtGuard } from './guards/refresth-jwt.guard';
+import { Public } from 'src/utils/decorators/public.decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService, private readonly userService : UsersService) {}
-
-
-
+  
+  
+  
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   async signin(@Request() req) {

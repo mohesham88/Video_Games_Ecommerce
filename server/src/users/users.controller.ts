@@ -9,9 +9,10 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from './utils/common/user-roles.enum';
 import { RolesGuard } from 'src/auth/guards/authorization.guard';
 import { MatchUserIdGuard } from 'src/auth/guards/match-user-id.guard';
+import { Public } from 'src/utils/decorators/public.decorator';
 
 @Controller('users')
-@UseGuards(JwtGuard)
+
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
