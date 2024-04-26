@@ -4,6 +4,7 @@ import { UserGender } from "../utils/common/user-gender.enum";
 import { genSalt, hash } from "bcrypt";
 import { IsOptional } from "class-validator";
 import { ProductEntity } from "src/products/entities/product.entity";
+import { ReviewEntity } from "src/reviews/entities/review.entity";
 
 
 
@@ -52,6 +53,9 @@ export class UserEntity{
   @OneToMany((type) => ProductEntity, (prod) => prod.addedBy)
   products : ProductEntity[];
 
+
+  @OneToMany((type) => ReviewEntity, (rev) => rev.user)
+  reviews : ReviewEntity[];
 
   @BeforeInsert()
   async hashPassword(password: string){

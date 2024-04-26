@@ -2,6 +2,7 @@
 // import { MaxLength, MinLength } from "class-validator";
 import slugify from "slugify";
 import { CategoryEntity } from "src/categories/entities/category.entity";
+import { ReviewEntity } from "src/reviews/entities/review.entity";
 import { UserEntity } from "src/users/entities/user.entity";
 import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Timestamp, Unique, UpdateDateColumn } from "typeorm";
 
@@ -76,4 +77,7 @@ export class ProductEntity {
   @ManyToOne((type) => CategoryEntity , (category) => category.products)
   category : CategoryEntity;
 
+
+  @OneToMany(type => ReviewEntity, (rev) => rev.product)
+  reviews : ReviewEntity[];
 }

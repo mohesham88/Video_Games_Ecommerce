@@ -8,10 +8,11 @@ import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from './auth/guards/jwt-auth.guard';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot(datasourceOptions), 
-    UsersModule, AuthModule, CategoriesModule, ProductsModule],
+    UsersModule, AuthModule, CategoriesModule, ProductsModule, ReviewsModule],
   controllers: [],
   providers: [
     {

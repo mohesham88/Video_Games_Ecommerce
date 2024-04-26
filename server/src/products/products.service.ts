@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException, UseGuards, forwardRef } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
+import { ReviewsService } from 'src/reviews/reviews.service';
 
 
 @Injectable()
@@ -13,7 +14,10 @@ export class ProductsService {
   constructor(
     @InjectRepository(ProductEntity)
     private productRepository: Repository<ProductEntity>,
-    private readonly categoryService: CategoriesService
+    private readonly categoryService: CategoriesService,
+
+    @Inject(forwardRef(() => ReviewsService))
+    private readonly reviewsService: ReviewsService
     ){}
   
   async create(createProductDto: CreateProductDto, userId : unknown) {
@@ -73,5 +77,10 @@ export class ProductsService {
       loadEagerRelations : true,
     })
     return productsPromise[0];
+  }
+
+  async findAllProductReviews(productId : string){
+
+    return await this.reviewsService.findAllProductReviews(productId);
   }
 }

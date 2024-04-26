@@ -1,5 +1,5 @@
 generate migrations file:
-npm run migration:generate -- db/migrations/initial
+npm run migration:generate -- db/migrations/NAME_OF_MIGRATION
 
 apply the migrations:
 npm run migration:run
