@@ -28,7 +28,7 @@ export class CreateUserDto {
   role : "admin" | "customer"; */
 
 
-  @IsString()
-  @IsNotEmpty()
+  @IsString() 
+  @IsOptional()
   address : string;
 }

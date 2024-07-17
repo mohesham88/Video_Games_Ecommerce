@@ -10,13 +10,17 @@ services:
     depends_on :
       - postgres
     environment:
-      DATABASE_URL: postgres://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@postgres:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}
       NODE_ENV : 3000
-      PORT : 3000
+      PORT : ${PORT}
+      CHOKIDAR_USEPOLLING: true
     ports:
       - "8080:8080"
-    # volumes:
-    #   - /etc/localtime:/etc/localtime:ro
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+      - /app/node_modules
+      # - ./src/:/app/src:ro
 
 
   postgres:
