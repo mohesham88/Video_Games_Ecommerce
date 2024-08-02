@@ -1,7 +1,7 @@
 # compiled output
 /dist
 /node_modules
-
+/gamerzz-logo-zip-file
 # Logs
 logs
 *.log
@@ -37,3 +37,4 @@ lerna-debug.log*
 
 
 .env
+.env.bak
