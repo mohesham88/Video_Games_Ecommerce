@@ -43,7 +43,8 @@ export class UsersService {
     delete oAuthUserToCreate.identityProvider;
 
     console.log('idObject: ', idObject);
-    const user = await this.userRepository.findOne(idObject);
+
+    const user = await this.userRepository.findOne({ where: idObject });
     if (user) {
       return user;
     }

@@ -38,16 +38,20 @@ export class UserEntity {
   })
   role?: UserRole;
 
+  @IsOptional()
   @Column({
     type: 'enum',
     enum: UserGender,
+    nullable: true,
   })
   gender: UserGender;
 
-  @Column()
+  @IsOptional()
+  @Column({ nullable: true })
   address: string;
 
-  @Column({ select: false })
+  @IsOptional()
+  @Column({ select: false, nullable: true })
   password: string;
 
   @CreateDateColumn()
@@ -64,6 +68,7 @@ export class UserEntity {
 
   @BeforeInsert()
   async hashPassword(password: string) {
+    if (!password) return;
     const salt = await genSalt();
     this.password = await hash(password || this.password, salt);
   }
