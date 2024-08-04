@@ -8,7 +8,7 @@ import {hash} from 'bcrypt'
 import { SignInDto } from './dto/Singin.dto';
 import * as bcrypt from 'bcrypt';
 import { NotFoundError } from 'rxjs';
-
+import { CreateOAuthUserDto } from './dto/create-oauth-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -51,15 +51,17 @@ export class UsersService {
 
   async update(id : string, updateUserDto: UpdateUserDto) : Promise<CreateUserDto>  {
 
-    const user = await this.userRepository.createQueryBuilder().update("Users").set(updateUserDto).where("id = :id", {id : id}).returning("*").updateEntity(true).execute();
+    /* const user = await this.userRepository.createQueryBuilder().update("Users").set(updateUserDto).where("id = :id", {id : id}).returning("*").updateEntity(true).execute();
+     */
     
-    console.log(user)
     
-    const {raw : [updatedUser]}  = user;
-    delete updatedUser.password;
-
-
-    return updatedUser;
+    const user = await this.userRepository.findOneBy({id});
+    const toSaveUser = this.userRepository.create({
+      ...user,
+      ...updateUserDto,
+    });
+    
+    return await this.userRepository.save(toSaveUser);
   }
 
   remove(id: number) {
@@ -80,7 +82,8 @@ export class UsersService {
 
   async validateUserCredentials(user : SignInDto) {
     const userExist = await this.userRepository.createQueryBuilder('Users').addSelect('Users.password').where('Users.email=:email', {email : user.email}).getOne();
-
+    console.log(user);
+    console.log(userExist)
     if(!userExist){
       return null;
     }
@@ -91,5 +94,30 @@ export class UsersService {
     else
       return null;
   }
+
+
+  async createOAuthUser(
+    oAuthUserToCreate: CreateOAuthUserDto,
+  ): Promise<UserEntity> {
+    const idObject = {
+      [oAuthUserToCreate.identityProvider + 'Id']: oAuthUserToCreate.id,
+    };
+
+    oAuthUserToCreate = { ...oAuthUserToCreate, ...idObject };
+    delete oAuthUserToCreate.id;
+    delete oAuthUserToCreate.identityProvider;
+
+    console.log('idObject: ', idObject);
+
+    const user = await this.userRepository.findOne({ where: idObject });
+    if (user) {
+      return user;
+    }
+
+    let newUser = await this.userRepository.create(oAuthUserToCreate);
+    newUser = await this.userRepository.save(newUser);
+    return newUser;
+  }
+
 
 }

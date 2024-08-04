@@ -43,6 +43,7 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.11.3",
@@ -52,6 +53,7 @@
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
+    "@types/passport-google-oauth20": "^2.0.16",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

@@ -12,22 +12,29 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { jwtStrategy } from './strategies/jwt-strategy';
 import { RefreshJwtStrategy } from './strategies/refreshToken-strategy';
+import { googleStrategy } from './strategies/googleAuth.strategy';
 
 @Module({
-  imports : [
-    JwtModule.register(
-    {
-      secret : process.env.JWT_SECRET,
+  imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: "3600s",
-      }
-    }
-  ),
-  TypeOrmModule.forFeature([UserEntity]),
-  UsersModule,
-  PassportModule
-],
+        expiresIn: '3600s',
+      },
+    }),
+    TypeOrmModule.forFeature([UserEntity]),
+    UsersModule,
+    PassportModule,
+  ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, UsersService, LocalAuthGuard, jwtStrategy, RefreshJwtStrategy]
+  providers: [
+    AuthService,
+    LocalStrategy,
+    googleStrategy,
+    UsersService,
+    LocalAuthGuard,
+    jwtStrategy,
+    RefreshJwtStrategy,
+  ],
 })
 export class AuthModule {}

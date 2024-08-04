@@ -1,28 +1,26 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-
-import {config} from "dotenv"
-import { dirname } from 'path';
+import { URL } from 'url';
+import { config } from 'dotenv';
 config();
 
-export const datasourceOptions : DataSourceOptions = 
-{
-  type: 'postgres',
-  host: process.env.POSTGRESQL_HOST,
-  port: Number(process.env.POSTGRESQL_PORT),
-  username: process.env.POSTGRESQL_USERNAME,
-  password: process.env.POSTGRESQL_PASSWORD,
-  database: process.env.POSTGRESQL_DATABASE,
-  entities: [
-      'dist/**/*.entity{.ts,.js}',
-  ],
-  migrations: [
-    "dist/db/migrations/*{.ts,.js}",
-  ],
-  synchronize: false, 
-  logging: false
-}
+const dbUrl = new URL(process.env.DATABASE_URL);
+const routingId = dbUrl.searchParams.get('options');
+dbUrl.searchParams.delete('options');
 
+export const dataSourceOptions: DataSourceOptions = {
+  type: 'cockroachdb',
+  url: dbUrl.toString(),
+  ssl: true,
+  extra: {
+    options: routingId,
+  },
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/db/migrations/*{.ts,.js}'],
+  timeTravelQueries: false,
+  synchronize: false,
+  logging: false,
+};
 
-const datasource= new DataSource(datasourceOptions);
+const dataSource = new DataSource(dataSourceOptions);
 
-export default datasource;
+export default dataSource;

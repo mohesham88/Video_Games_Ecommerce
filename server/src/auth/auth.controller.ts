@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from 'src/users/dto/Singin.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -20,6 +20,17 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   async signin(@Request() req) {
+    return await this.authService.signin(req.user);
+  }
+
+  
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth() {}
+
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Request() req) {
     return await this.authService.signin(req.user);
   }
 

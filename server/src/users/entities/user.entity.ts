@@ -1,69 +1,78 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Timestamp, Unique, UpdateDateColumn } from "typeorm";
-import { UserRole } from "../utils/common/user-roles.enum";
-import { UserGender } from "../utils/common/user-gender.enum";
-import { genSalt, hash } from "bcrypt";
-import { IsOptional } from "class-validator";
-import { ProductEntity } from "src/products/entities/product.entity";
-import { ReviewEntity } from "src/reviews/entities/review.entity";
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Timestamp,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UserRole } from '../utils/common/user-roles.enum';
+import { UserGender } from '../utils/common/user-gender.enum';
+import { genSalt, hash } from 'bcrypt';
+import { IsOptional } from 'class-validator';
+import { ProductEntity } from 'src/products/entities/product.entity';
+import { ReviewEntity } from 'src/reviews/entities/review.entity';
 
-
-
-
-
-@Entity("Users")
-export class UserEntity{
-  @PrimaryGeneratedColumn("uuid")
+@Entity('Users')
+export class UserEntity {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({length : 30, unique : true})
-  username : string;
+  @Column({ length: 20, unique: true })
+  username: string;
 
+  @Column({ unique: true })
+  email: string;
 
-  @Column({ unique : true })
-  email : string;
-
+  @IsOptional()
+  @Column({ nullable: true, unique: true, select: true })
+  googleId?: string;
 
   @IsOptional()
   @Column({
-    type: "enum",
-    enum : UserRole,
+    type: 'enum',
+    enum: UserRole,
     default: UserRole.CUSTOMER,
   })
-  role? : UserRole
+  role?: UserRole;
 
+  @IsOptional()
   @Column({
-    type: "enum",
-    enum : UserGender,
+    type: 'enum',
+    enum: UserGender,
+    nullable: true,
   })
-  gender : UserGender
+  gender: UserGender;
 
-  @Column()
-  address : string;
-  
-  @Column({select : false})
-  password : string;
+  @IsOptional()
+  @Column({ nullable: true })
+  address: string;
+
+  @IsOptional()
+  @Column({ select: false, nullable: true })
+  password: string;
 
   @CreateDateColumn()
-  createdAt : Timestamp;
+  createdAt: Timestamp;
 
-  
   @UpdateDateColumn()
-  upadatedAt : Timestamp;
+  updatedAt: Timestamp;
 
-  @OneToMany((type) => ProductEntity, (prod) => prod.addedBy)
-  products : ProductEntity[];
+  @OneToMany((_) => ProductEntity, (prod) => prod.addedBy)
+  products: ProductEntity[];
 
-
-  @OneToMany((type) => ReviewEntity, (rev) => rev.user)
-  reviews : ReviewEntity[];
+  @OneToMany((_) => ReviewEntity, (rev) => rev.user)
+  reviews: ReviewEntity[];
 
   @BeforeInsert()
-  async hashPassword(password: string){
-    const salt = await genSalt();
-    this.password = await hash(password || this.password , salt);
+  @BeforeUpdate()
+  async hashPassword(password: string) {
+    if(this.password){
+      const salt = await genSalt();
+      this.password = await hash(password || this.password, salt);
+    }
   }
-
-
-
 }
-

@@ -1,6 +1,6 @@
 import { Get, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { datasourceOptions } from 'db/data-source';
+import { dataSourceOptions } from 'db/data-source';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -11,7 +11,7 @@ import { JwtGuard } from './auth/guards/jwt-auth.guard';
 import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(datasourceOptions), 
+  imports: [TypeOrmModule.forRoot(dataSourceOptions), 
     UsersModule, AuthModule, CategoriesModule, ProductsModule, ReviewsModule],
   controllers: [],
   providers: [

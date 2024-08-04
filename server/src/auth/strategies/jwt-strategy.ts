@@ -14,9 +14,12 @@ export class jwtStrategy extends PassportStrategy(Strategy, 'jwt'){
     })
   }
 
-
+  
+  
   async validate(payload: any): Promise<any>{
-    return await this.authService.getUserById(payload.sub.id);
+    let jwt = ExtractJwt.fromAuthHeaderAsBearerToken();
+    console.log(jwt)
+    return await this.authService.getUserById(payload.sub.id); 
   }
 
 
