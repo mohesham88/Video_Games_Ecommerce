@@ -4,7 +4,7 @@ import "./globals.css";
 // import App from "./App";
 import {Toaster} from 'react-hot-toast';
 import Navbar from "@/components/ui/navbar";
-import {StoreProvider} from "./StoreProvider";
+import {StoreProvider} from "../redux/StoreProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,10 +21,9 @@ export default function RootLayout({
     <StoreProvider>
       <html lang="en">
         <body className={inter.className}>
-
           <div className="py-14">
             <Navbar />
-            
+            {children}
             <Toaster position="bottom-center" reverseOrder={false} />
           </div>
         </body>

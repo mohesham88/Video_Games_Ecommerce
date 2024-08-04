@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { cookies } from "next/headers";
 import Cookies from 'js-cookie'
 import { AppThunk } from "../store";
@@ -25,8 +25,13 @@ const authSlice = createSlice({
 
 export const {setAuth} = authSlice.actions;
 
-export const checkAuth = (): AppThunk => (dispatch) => {
-  const token = Cookies.get('accessToken');
-  dispatch(setAuth(!!token));
+export const authSuccesful = (): AppThunk => (dispatch) => {
+  dispatch(setAuth(true));
 };
+
+export const authUnSuccesful = (): AppThunk => (dispatch) => {
+  dispatch(setAuth(false));
+};
+
+
 export default authSlice.reducer;

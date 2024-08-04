@@ -81,6 +81,10 @@ export class UsersService {
   async validateUserCredentials(user : SignInDto) {
     const userExist = await this.userRepository.createQueryBuilder('Users').addSelect('Users.password').where('Users.email=:email', {email : user.email}).getOne();
 
+    if(!userExist){
+      return null;
+    }
+
     const isPasswordValid = await bcrypt.compare(user.password, userExist.password);
     if(isPasswordValid)
       return userExist;

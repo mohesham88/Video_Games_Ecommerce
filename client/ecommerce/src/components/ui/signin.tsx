@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,6 +23,12 @@ import { FormEvent } from "react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import { PasswordInput } from "./password_input"
+import { RootState, useAppDispatch, useAppSelector } from "@/redux/store"
+import AuthReducer, { authSuccesful } from '@/redux/features/authSlice'
+
+
+
+
 
 export default function CardWithForm() {
   const router = useRouter();
@@ -31,6 +36,12 @@ export default function CardWithForm() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [error , setError] = React.useState('');
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector((state: RootState) => state.authReducer.auth.isAuthenticated ?? false);
+
+  React.useEffect(() => {
+    dispatch(authSuccesful());
+  }, [dispatch]);
   
   async function handleSubmit(event: FormEvent<HTMLFormElement>){
     event.preventDefault()
@@ -47,8 +58,10 @@ export default function CardWithForm() {
         body: JSON.stringify({ email, password }),
       })
       console.log(response)
-      if (response.ok) {
+      if (response.ok) {{
         router.push('/')
+        dispatch(authSuccesful())
+      }
       }else{
         // handle errors
         setError("Invalid email or password")
@@ -75,11 +88,6 @@ export default function CardWithForm() {
               <div className="grid w-full items-center gap-4">
                 <Label htmlFor="password">Password</Label>
                 <PasswordInput id="password" placeholder="Your password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
-                {/* <Input id="password" placeholder="Your Password" type="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                /> */}
               </div>
             </div>
         </CardContent>

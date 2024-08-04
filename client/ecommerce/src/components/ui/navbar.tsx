@@ -1,21 +1,54 @@
-"use client"
+"use client";
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { RootState, useAppDispatch } from "@/redux/store";
+import { RootState, useAppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuth } from "@/redux/features/authSlice";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
+import { authUnSuccesful } from "@/redux/features/authSlice";
+import { useRouter } from "next/navigation";
 
 
 
 
 
-export default function Navbar() {
+const Navbar = () => {
 
-/*   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-
-  const dispatch = useDispatch(); */
+  const [mounted, setMounted] = useState(false);
+  const isAuthenticated = useAppSelector((state: RootState) => state.authReducer.auth.isAuthenticated ?? false)
+  const dispatch = useAppDispatch();
   
+  const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+    dispatch(authUnSuccesful());
+  }, [dispatch])
+
+  async function logout(){
+    try{
+      const response = await fetch('api/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        
+      })
+      console.log(response)
+      if (response.ok) {{
+        router.push('/')
+        dispatch(authUnSuccesful())
+      }
+    }
+    }catch(err){
+      console.log(err)
+      // setError("Failed to login try again later");
+    }
+  }
+
+  if (!mounted) {
+    return null;
+  }
+
+
   
   return (
     <nav className="fixed inset-x-0 top-0 z-50 bg-white shadow-sm dark:bg-gray-950/90">
@@ -25,8 +58,7 @@ export default function Navbar() {
           <span className="italic bold font-extrabold" >
             Gamerzz
           </span>
-            {/* <MountainIcon className="h-6 w-6" /> */}
-          {/*  <span className="sr-only">Acme Inc</span> */}
+            
           </Link>
           <nav className="hidden md:flex gap-4">
             <Link
@@ -58,7 +90,7 @@ export default function Navbar() {
               Contact
             </Link>
           </nav>
-          {/* {!isAuthenticated && (
+          {!isAuthenticated && (
             <div className="flex items-center gap-4">
                 <Button variant="outline" size="sm">
                   Sign in
@@ -72,12 +104,14 @@ export default function Navbar() {
               <Button variant="outline" size="sm">
                 Profile
               </Button>
-              <Button size="sm">Logout</Button>
+              <Button size="sm" onClick={() => logout}>Logout</Button>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </nav>
   )
 }
+
+export default Navbar;
 
