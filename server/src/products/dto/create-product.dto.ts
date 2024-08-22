@@ -1,4 +1,5 @@
-import { IsArray, IsEmpty, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, MaxLength, Min, MinLength,  } from "class-validator";
+import { IsArray, IsDate, IsDateString, IsDecimal, IsEmpty, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, Max, MaxLength, Min, MinLength,  } from "class-validator";
+import { UUID } from "crypto";
 import { CategoryEntity } from "src/categories/entities/category.entity";
 
 
@@ -11,7 +12,7 @@ export class CreateProductDto {
 
   @IsNotEmpty()
   @MinLength(10)
-  @MaxLength(800)
+  @MaxLength(2000)
   description : string;
 
 
@@ -32,8 +33,19 @@ export class CreateProductDto {
   images : string[];  // array of urls
 
   @IsNotEmpty()
-  @IsUUID()
-  category : CategoryEntity;
+  @IsArray({
+    
+  })
+  categories : CategoryEntity[]; // array of category ids;
+
+  @IsDateString({})
+  release_date : Date;
+
+  @IsArray()
+  platforms : string[]; 
+
+
+
 
 
 }

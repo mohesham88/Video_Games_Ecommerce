@@ -10,7 +10,7 @@ export class jwtStrategy extends PassportStrategy(Strategy, 'jwt'){
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: `${process.env.jwt_secret}`
+      secretOrKey: `${process.env.JWT_SECRET}`
     })
   }
 
@@ -18,7 +18,7 @@ export class jwtStrategy extends PassportStrategy(Strategy, 'jwt'){
   
   async validate(payload: any): Promise<any>{
     let jwt = ExtractJwt.fromAuthHeaderAsBearerToken();
-    console.log(jwt)
+    // console.log(jwt)
     return await this.authService.getUserById(payload.sub.id); 
   }
 

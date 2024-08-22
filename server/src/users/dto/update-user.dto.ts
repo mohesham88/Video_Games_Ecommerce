@@ -11,11 +11,16 @@ export class UpdateUserDto{
   @IsOptional()
   address : string;
   
+
+  @IsString()
+  @IsOptional()
+  username : string;
+
 /*   @IsOptional()
   @IsIn(["male", "female"])
   gender : "male" | "female";
-   */
   
+   */
   @IsOptional()
   @IsNotEmpty()
   @IsString()

@@ -54,7 +54,7 @@ export class UsersService {
     /* const user = await this.userRepository.createQueryBuilder().update("Users").set(updateUserDto).where("id = :id", {id : id}).returning("*").updateEntity(true).execute();
      */
     
-    
+    console.log(`user `, updateUserDto)
     const user = await this.userRepository.findOneBy({id});
     const toSaveUser = this.userRepository.create({
       ...user,

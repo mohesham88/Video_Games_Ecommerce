@@ -12,8 +12,7 @@ export class CategoryDto{
   title : string;
   
   
-  @IsString()
-  @MinLength(12)
+  @IsOptional()
   @MaxLength(500)
   description : string;
 

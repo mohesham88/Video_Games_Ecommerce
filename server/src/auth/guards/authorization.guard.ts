@@ -9,25 +9,26 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRole = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
-      context.getHandler(),
-    ]);
+    const requiredRole = this.reflector.getAllAndOverride<UserRole[]>(
+      ROLES_KEY,
+      [context.getHandler()],
+    );
     if (!requiredRole) {
       return true;
     }
-    const user : UserEntity = context.switchToHttp().getRequest().user;
+    const user: UserEntity = context.switchToHttp().getRequest().user;
+    // console.log(`user from guard: `)
     // console.log(user)
     // console.log(requiredRole);
-    
-    return (this.mathcRoles(requiredRole, user));
-    // return  user && user.role === requiredRole; 
+
+    return this.mathcRoles(requiredRole, user);
+    // return  user && user.role === requiredRole;
   }
 
-
-
-  mathcRoles(roles : string[], user: UserEntity): boolean {
-    const userRole : UserRole = user.role;
-    return roles.map((role : UserRole)=> userRole.includes(role)).find((val:boolean) => val == true);
- 
+  mathcRoles(roles: string[], user: UserEntity): boolean {
+    const userRole: UserRole = user.role;
+    return roles
+      .map((role: UserRole) => userRole.includes(role))
+      .find((val: boolean) => val == true);
   }
 }

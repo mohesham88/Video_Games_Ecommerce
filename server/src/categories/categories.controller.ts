@@ -8,31 +8,28 @@ import { UserRole } from 'src/users/utils/common/user-roles.enum';
 
 @Controller('category')
 // @UseGuards(JwtGuard, RolesGuard)
-@UseGuards(RolesGuard)
+/* @UseGuards(RolesGuard) */
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
-
-
+  constructor(private readonly categoriesService: CategoriesService) { }
 
   @Post()
   @Roles(UserRole.ADMIN)
-  async create(@Body() category: CategoryDto) : Promise<CategoryDto> {
+  async create(@Body() category: CategoryDto): Promise<CategoryDto> {
     return await this.categoriesService.createCategory(category);
   }
 
   @Get(':id')
-  async findCategory(@Param('id') id: string) : Promise<CategoryDto>{
+  async findCategory(@Param('id') id: string): Promise<CategoryDto> {
     console.log(id);
     return await this.categoriesService.findOne(id);
   }
 
-
   @Get()
-  async getAllCategories() : Promise<{categories : CategoryDto[]}> {
+  async getAllCategories(): Promise<{ categories: CategoryDto[] }> {
     const categories = await this.categoriesService.findAll();
 
     return {
-      categories : categories
+      categories: categories,
     };
   }
 }

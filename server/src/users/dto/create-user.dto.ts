@@ -3,7 +3,7 @@ import { Equals, IsEmail, IsIn, IsNotEmpty, IsOptional, IsString, IsStrongPasswo
 
 export class CreateUserDto {
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   username : string;
 

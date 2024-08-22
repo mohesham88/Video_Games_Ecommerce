@@ -21,7 +21,7 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 20, unique: true })
+  @Column()
   username: string;
 
   @Column({ unique: true })
@@ -66,6 +66,15 @@ export class UserEntity {
 
   @OneToMany((_) => ReviewEntity, (rev) => rev.user)
   reviews: ReviewEntity[];
+
+
+
+  @BeforeInsert()
+  async addUserName(){
+    if(!this.username){
+      this.username = this.email.split('@')[0];
+    }
+  }
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -1,10 +1,11 @@
 
 // import { MaxLength, MinLength } from "class-validator";
+import { IsOptional } from "class-validator";
 import slugify from "slugify";
 import { CategoryEntity } from "src/categories/entities/category.entity";
 import { ReviewEntity } from "src/reviews/entities/review.entity";
 import { UserEntity } from "src/users/entities/user.entity";
-import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Timestamp, Unique, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Timestamp, Unique, UpdateDateColumn } from "typeorm";
 
 
 @Entity("Products")
@@ -58,6 +59,23 @@ export class ProductEntity {
   slug : string;
 
 
+  @Column({
+    type : "date",
+    nullable : true
+  })
+  release_date : Date;
+
+
+  
+  @IsOptional()
+  @Column({
+    type: 'simple-array',
+    nullable: true,
+  })
+  platforms : string[]; // the platforms that the product is available on
+
+
+
   @BeforeInsert()
   slugify_product() {
     this.slug = slugify(this.name , {
@@ -74,8 +92,11 @@ export class ProductEntity {
 
 
   // one to many product can have multiple categories
-  @ManyToOne((type) => CategoryEntity , (category) => category.products)
-  category : CategoryEntity;
+  @ManyToMany(() => CategoryEntity, (category) => category.products , {
+    cascade : true,
+  })
+  @JoinTable()
+  categories: CategoryEntity[]; 
 
 
   @OneToMany(type => ReviewEntity, (rev) => rev.product)

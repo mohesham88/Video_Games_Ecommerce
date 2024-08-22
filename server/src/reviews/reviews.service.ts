@@ -51,7 +51,7 @@ export class ReviewsService {
         relations : {
           user : true,
           product : {
-            category : true,
+            categories : true,
           },
         }
       }
@@ -73,7 +73,7 @@ export class ReviewsService {
         relations : {
           user : true,
           product : {
-            category : true,
+            categories : true,
           },
         }
     })

@@ -2,7 +2,7 @@ import { Catch, ExceptionFilter, ArgumentsHost, HttpStatus, BadRequestException 
 import { Response } from 'express';
 import { QueryFailedError, TypeORMError } from 'typeorm';
 
-@Catch(TypeORMError)
+@Catch(TypeORMError , QueryFailedError)
 export class TypeormExceptionFilter implements ExceptionFilter {
 
 
@@ -12,6 +12,7 @@ export class TypeormExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR, message = "Internal Server Error";
 
+    console.log(exception);
 
     const typeromErrorCodes = {
       UNIQUE : "23505",

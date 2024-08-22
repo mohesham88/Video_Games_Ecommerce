@@ -6,6 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
 import { ReviewsService } from 'src/reviews/reviews.service';
+import { CategoryEntity } from 'src/categories/entities/category.entity';
+import dataSource from 'db/data-source';
+import { UsersService } from 'src/users/users.service';
 
 
 @Injectable()
@@ -22,25 +25,45 @@ export class ProductsService {
   
   async create(createProductDto: CreateProductDto, userId : unknown) {
 
-    const categoryId = createProductDto.category;
-    
+    // DON'T CHANGE THIS FUNCTION I KNOW IT LOOK UGLY BUT IT WORKS ONLY THIS WAY @MOSTAFA
+    const categories : CategoryEntity[] = [];
 
-    const category = await this.categoryService.findOne(String(categoryId));
-
-
-    const product =  this.productRepository.create({
-      ...createProductDto,
-      addedBy : userId,
-    });
+    for (const categoryId of createProductDto.categories) {
+        const category : CategoryEntity = await this.categoryService.findOne(String(categoryId));
+          categories.push(category);
+          if(!category){
+            throw new NotFoundException(`Category ${categoryId} not found`);
+          }
+        }
+        
+      const product =  this.productRepository.create({
+        ...createProductDto,
+        addedBy : userId,
+        categories : categories,
+      });
+      
     return await this.productRepository.save(product);
   }
 
   async findAll() : Promise<ProductEntity[]> {
-    return await this.productRepository.find();
+    return await this.productRepository.find(/* {
+      relations : {
+        categories : true,
+        addedBy : true,
+      },
+    } */);
   }
 
   async findOneById(id: string) {
-    const product = await this.productRepository.findOneBy({id});
+    const product = await this.productRepository.findOne({
+      where: {
+        id,
+      },
+      relations : {
+        categories : true,
+        addedBy : true,
+      }
+    })
 
     if(!product)
         throw new NotFoundException(`Product ${id} not found`);
@@ -49,7 +72,15 @@ export class ProductsService {
 
 
   async findOneBySlug(slug: string) : Promise<ProductEntity> {
-    const product = await this.productRepository.findOneBy({slug});
+    const product = await this.productRepository.findOne({
+      where : {
+        slug,
+      },
+      relations : {
+        categories: true,
+        addedBy : true,
+      }
+    });
     if(!product)
         throw new NotFoundException(`Product not found`);
     return product;
@@ -71,7 +102,7 @@ export class ProductsService {
         id : id,
       },
       relations : {
-        category : true,
+        categories : true,
         addedBy : true,
       },
       loadEagerRelations : true,

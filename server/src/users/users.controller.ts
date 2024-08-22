@@ -41,6 +41,7 @@ export class UsersController {
   @UseGuards(MatchUserIdGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) : Promise<{user : CreateUserDto}> {
+    console.log(updateUserDto)
     return {
       user : await this.usersService.update(id , updateUserDto)
     };
